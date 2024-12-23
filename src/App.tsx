@@ -1,10 +1,11 @@
 import "./App.css";
-import Chat from "./pages/Chat";
+import MultiChat from "./pages/MultiChat";
 
 function App() {
   return (
     <>
-      <Chat />
+      {/* <Chat /> */}
+      <MultiChat />
     </>
   );
 }
