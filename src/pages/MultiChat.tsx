@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import Chat from "./DirectChat";
 
-const socket = io("http://localhost:3000"); // Backend URL
+const socket = io("http://localhost:3000", {
+  extraHeaders: {
+    authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5OTA1Yjg2NC1iYjQ3LTQxMWItYjkyMi03M2EzZmQ0NzI1MWYiLCJlbWFpbCI6ImFrYXNoIiwiaWF0IjoxNzM2MjY1NjIzLCJleHAiOjE3MzYyNjkyMjN9.2rN71ZpvMXwc9wm0Zfv8yEDvaQsbnz6XgKJ2Fzih4fE`,
+  },
+}); // Backend URL
 
 function MultiChat(): JSX.Element {
   const users = ["user1", "user2"]; // Example user list
