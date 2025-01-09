@@ -1,11 +1,11 @@
 import "./App.css";
-import MultiChat from "./pages/MultiChat";
+import Routers from "./routes/Routers";
 
 function App() {
   return (
     <>
       {/* <Chat /> */}
-      <MultiChat />
+      <Routers />
     </>
   );
 }
