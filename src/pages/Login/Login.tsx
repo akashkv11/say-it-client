@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Input, Button, Checkbox, Card } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import api from "../utils/axios-instance";
+import api from "../../utils/axios-instance";
 
 type FormValues = {
   email: string;
