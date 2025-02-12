@@ -2,11 +2,27 @@ import { Button, Col, Layout, Menu, Row, Typography } from "antd";
 import React from "react";
 import "./home-page.css";
 import { useNavigate } from "react-router-dom";
+import { ItemType, MenuItemType } from "antd/es/menu/interface";
 const { Header, Content, Footer } = Layout;
 const { Title } = Typography;
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
+  const menuItems: ItemType<MenuItemType>[] | undefined = [
+    {
+      label: "Home",
+      key: "1",
+    },
+    {
+      label: "About",
+      key: "2",
+    },
+    {
+      label: "Contact",
+      key: "3",
+    },
+  ];
+
   return (
     <Layout>
       {/* Header Section */}
@@ -17,11 +33,8 @@ const HomePage: React.FC = () => {
           mode="horizontal"
           defaultSelectedKeys={["1"]}
           className="w-100"
-        >
-          <Menu.Item key="1">Home</Menu.Item>
-          <Menu.Item key="2">About</Menu.Item>
-          <Menu.Item key="3">Contact</Menu.Item>
-        </Menu>
+          items={menuItems}
+        />
       </Header>
 
       {/* Content Section */}
@@ -39,7 +52,9 @@ const HomePage: React.FC = () => {
               >
                 Sign in
               </Button>
-              <Button size="large">Sign Up</Button>
+              <Button size="large" onClick={() => navigate("/register")}>
+                Sign Up
+              </Button>
             </div>
           </Col>
         </Row>
