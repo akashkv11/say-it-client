@@ -1,10 +1,12 @@
 import { Button, Col, Layout, Menu, Row, Typography } from "antd";
 import React from "react";
 import "./home-page.css";
+import { useNavigate } from "react-router-dom";
 const { Header, Content, Footer } = Layout;
 const { Title } = Typography;
 
 const HomePage: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <Layout>
       {/* Header Section */}
@@ -29,7 +31,12 @@ const HomePage: React.FC = () => {
             <div style={{ textAlign: "center" }}>
               <Title level={2}>Welcome to SayIt</Title>
 
-              <Button type="primary" size="large" style={{ marginRight: 10 }}>
+              <Button
+                type="primary"
+                size="large"
+                style={{ marginRight: 10 }}
+                onClick={() => navigate("/login")}
+              >
                 Sign in
               </Button>
               <Button size="large">Sign Up</Button>
