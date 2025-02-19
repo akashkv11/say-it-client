@@ -18,7 +18,7 @@ export interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-0;
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -36,13 +36,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         const user: User = { id: data.id, username: data.username };
         localStorage.setItem("token", response.data.data.access_token);
         localStorage.setItem("user", JSON.stringify(user));
+        setUser(user);
       }
 
-      setUser(user);
-      return true
+      return true;
     } catch (error) {
       console.error("Login error:", error);
-      return false
+      return false;
     }
   };
 
