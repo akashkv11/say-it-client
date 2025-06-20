@@ -1,7 +1,8 @@
-import React from "react";
-import { Form, Input, Button, Checkbox, Card } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import api from "../utils/axios-instance";
+import { Button, Card, Checkbox, Form, Input } from "antd";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 type FormValues = {
   email: string;
@@ -10,14 +11,19 @@ type FormValues = {
 };
 const Login: React.FC = () => {
   const [form] = Form.useForm();
+  const { login, user } = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user) {
+      navigate("/home"); // 🚀 Redirect if already logged in
+    }
+  }, [user, navigate]);
   const onFinish = async (values: FormValues) => {
     try {
-      const response = await api.post("/auth/signin", values);
+      const isLoginSuccess = await login(values);
 
-      console.log(response.data.data.access_token);
-
-      if (response?.data?.success) {
-        localStorage.setItem("token", response.data.data.access_token);
+      if (isLoginSuccess) {
+        navigate("/home");
       }
     } catch (error) {
       console.log(error);
