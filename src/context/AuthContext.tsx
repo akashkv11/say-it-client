@@ -1,6 +1,7 @@
 // src/context/AuthContext.tsx
 import React, { createContext, useContext, useState } from "react";
 import api from "../utils/axios-instance";
+import { errorHandler } from "../utils/error-handler";
 // src/types/auth.ts
 export interface User {
   id: string;
@@ -28,22 +29,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   });
 
   const login = async (values: FormValues) => {
-    try {
-      const response = await api.post("/auth/signin", values);
-
-      const data = response?.data?.data;
-      if (response?.data?.success) {
-        const user: User = { id: data.id, username: data.username };
-        localStorage.setItem("token", response.data.data.access_token);
-        localStorage.setItem("user", JSON.stringify(user));
-        setUser(user);
-      }
-
-      return true;
-    } catch (error) {
+    const [error, response] = await errorHandler(
+      api.post("/auth/signin", values)
+    );
+    if (error) {
       console.error("Login error:", error);
       return false;
     }
+
+    const data = response?.data?.data;
+    if (response?.data?.success) {
+      const user: User = { id: data.id, username: data.username };
+      localStorage.setItem("token", response.data.data.access_token);
+      localStorage.setItem("user", JSON.stringify(user));
+      setUser(user);
+      return true;
+    }
+    return false;
   };
 
   const logout = () => {
