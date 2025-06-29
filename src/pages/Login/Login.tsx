@@ -15,18 +15,13 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   useEffect(() => {
     if (user) {
-      navigate("/home"); // 🚀 Redirect if already logged in
+      navigate("/dashboard"); // 🚀 Redirect if already logged in
     }
   }, [user, navigate]);
   const onFinish = async (values: FormValues) => {
-    try {
-      const isLoginSuccess = await login(values);
-
-      if (isLoginSuccess) {
-        navigate("/home");
-      }
-    } catch (error) {
-      console.log(error);
+    const isLoginSuccess = await login(values);
+    if (isLoginSuccess) {
+      navigate("/dashboard"); // 🚀 Redirect to dashboard on successful login
     }
   };
 
@@ -82,7 +77,7 @@ const Login: React.FC = () => {
         </Form>
         <div style={{ textAlign: "center" }}>
           <a href="/forgot-password">Forgot password?</a> |{" "}
-          <a href="/register">Register now</a>
+          <a href="/signup">Sign up</a>
         </div>
       </Card>
     </div>
