@@ -1,11 +1,17 @@
 import "./App.css";
+import { AuthProvider } from "./context/AuthContext";
+import { MessageProvider } from "./context/messageContext";
 import Routers from "./routes/Routers";
 
 function App() {
   return (
     <>
       {/* <Chat /> */}
-      <Routers />
+      <MessageProvider>
+        <AuthProvider>
+          <Routers />
+        </AuthProvider>
+      </MessageProvider>
     </>
   );
 }
