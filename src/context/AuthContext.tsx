@@ -1,7 +1,10 @@
 // src/context/AuthContext.tsx
+import { AxiosError, AxiosResponse } from "axios";
 import React, { createContext, useContext, useState } from "react";
+import { ErrorResponseType, ResponseType } from "../types/response-type";
 import api from "../utils/axios-instance";
-import { errorHandler } from "../utils/error-handler";
+import tryCatch from "../utils/try-catch";
+import { usePopMessage } from "./messageContext";
 // src/types/auth.ts
 export interface User {
   id: string;
@@ -18,6 +21,8 @@ export interface AuthContextType {
   logout: () => void;
 }
 
+type LoginResponse = { id: string; username: string; access_token: string };
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -27,13 +32,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const storedUser = localStorage.getItem("user");
     return storedUser ? JSON.parse(storedUser) : null;
   });
+  const { popMessage } = usePopMessage();
 
   const login = async (values: FormValues) => {
-    const [error, response] = await errorHandler(
-      api.post("/auth/signin", values)
-    );
+    const { data: response, error } = await tryCatch<
+      AxiosResponse<ResponseType<LoginResponse>>,
+      AxiosError<ErrorResponseType>
+    >(api.post("/auth/signin", values));
     if (error) {
       console.error("Login error:", error);
+      popMessage("error", error.response?.data?.message);
       return false;
     }
 
@@ -43,6 +51,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       localStorage.setItem("token", response.data.data.access_token);
       localStorage.setItem("user", JSON.stringify(user));
       setUser(user);
+      popMessage("success", "Login successful!");
       return true;
     }
     return false;
