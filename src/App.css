@@ -45,6 +45,12 @@
   animation-delay: 0.1s;
 }
 
+.ant-message-notice-content {
+  font-size: 18px;
+  padding: 16px 24px;
+  border-radius: 8px;
+}
+
 @keyframes rotate {
   to {
     transform: rotate(360deg);
