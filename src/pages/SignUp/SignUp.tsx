@@ -1,13 +1,14 @@
+import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
+import { Button, Card, Form, Input } from "antd";
 import React from "react";
-import { Form, Input, Button, Card } from "antd";
-import { UserOutlined, MailOutlined, LockOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import { usePopMessage } from "../../context/messageContext";
 import api from "../../utils/axios-instance";
 import { errorHandler } from "../../utils/error-handler";
-import popMessage from "../../utils/show-message";
-import { useNavigate } from "react-router-dom";
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
+  const {popMessage} = usePopMessage();
   const onFinish = async (values: any) => {
     console.log("Registration Data:", values);
     const [error, data] = await errorHandler(api.post("/users/signup", values));
