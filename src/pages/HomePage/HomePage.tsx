@@ -52,7 +52,7 @@ const HomePage: React.FC = () => {
               >
                 Sign in
               </Button>
-              <Button size="large" onClick={() => navigate("/register")}>
+              <Button size="large" onClick={() => navigate("/signup")}>
                 Sign Up
               </Button>
             </div>
