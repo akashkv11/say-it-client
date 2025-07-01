@@ -1,112 +1,43 @@
-import React, { useState } from "react";
-import { Layout, Menu, Avatar, List, Typography, Button } from "antd";
-import {
-  MessageOutlined,
-  UserOutlined,
-  SettingOutlined,
-  LogoutOutlined,
-} from "@ant-design/icons";
-import { ItemType, MenuItemType } from "antd/es/menu/interface";
-import { useAuth } from "../../context/AuthContext";
-
-const { Header, Sider, Content } = Layout;
-const { Title } = Typography;
+import { Layout } from "antd";
+import React, { useEffect, useState } from "react";
+import SideBar from "../../components/SideBar";
+import RecentChats from "./components/RecentChats";
+import ChatPage from "../ChatPage/ChatPage";
+import { getAllUsers } from "../../services/user.service";
+import { User } from "../../context/AuthContext";
 
 const Dashboard: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const { logout } = useAuth();
+  const [isChatPageVisible, setIsChatPageVisible] = useState(false);
+  const [usersList, setUsersList] = useState<User[]>([]);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
-  const items: ItemType<MenuItemType>[] = [
-    {
-      key: "1",
-      icon: <MessageOutlined />,
-      label: "Chats",
-    },
-    {
-      key: "2",
-      icon: <UserOutlined />,
-      label: "Contacts",
-    },
-    {
-      key: "3",
-      icon: <SettingOutlined />,
-      label: "Settings",
-    },
-    {
-      key: "4",
-      icon: <LogoutOutlined />,
-      label: "Logout",
-      danger: true,
-      onClick: logout, // Handle logout action
-    },
-  ];
+  useEffect(() => {
+    // Fetch users when the component mounts
+    handleGetUsers();
+  }, []);
 
+  const handleGetUsers = async () => {
+    const users = await getAllUsers();
+    setUsersList(users);
+  };
   return (
     <Layout style={{ minHeight: "100vh" }}>
       {/* Sidebar */}
-      <Sider
-        theme="dark"
-        width={250}
-        collapsible
-        collapsed={collapsed}
-        onCollapse={(value) => setCollapsed(value)}
-      >
-        <div style={{ padding: 20, textAlign: "center" }}>
-          <Avatar size={64} icon={<UserOutlined />} />
-          {!collapsed && (
-            <Title level={4} style={{ color: "white", marginTop: 10 }}>
-              User Name
-            </Title>
-          )}
-          dashboard{" "}
-        </div>
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={["1"]}
-          items={items}
-        />
-      </Sider>
-
+      <SideBar />
       {/* Main Content */}
-      <Layout>
-        {/* Header */}
-        <Header
-          style={{ background: "#fff", padding: 20, textAlign: "center" }}
-        >
-          <Title level={3}>Welcome to SayIt</Title>
-        </Header>
 
-        {/* Chat Area */}
-        <Content
-          style={{
-            margin: 20,
-            background: "#fff",
-            padding: 20,
-            borderRadius: 8,
-          }}
-        >
-          <Title level={4}>Recent Chats</Title>
-          <List
-            itemLayout="horizontal"
-            dataSource={[
-              { name: "Alice", message: "Hey, how are you?" },
-              { name: "Bob", message: "Let's catch up later!" },
-              { name: "Charlie", message: "Sent a new file." },
-            ]}
-            renderItem={(item) => (
-              <List.Item>
-                <List.Item.Meta
-                  avatar={<Avatar icon={<UserOutlined />} />}
-                  title={item.name}
-                  description={item.message}
-                />
-                <Button type="link">Open</Button>
-              </List.Item>
-            )}
-          />
-        </Content>
-      </Layout>
+      <RecentChats
+        setSelectedUser={setSelectedUser}
+        setIsChatPageVisible={setIsChatPageVisible}
+        isVisible={isChatPageVisible}
+        usersList={usersList}
+      />
+      <ChatPage
+        setIsChatPageVisible={setIsChatPageVisible}
+        isVisible={isChatPageVisible}
+        recipient={selectedUser} // Replace with actual user data
+      />
+      {/* Footer */}
     </Layout>
   );
 };
