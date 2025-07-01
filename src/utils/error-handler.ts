@@ -1,6 +1,6 @@
-async function errorHandler<T>(
+async function errorHandler<T, E = Error>(
   promise: Promise<T>
-): Promise<[undefined, T] | [Error, undefined]> {
+): Promise<[undefined, T] | [E, undefined]> {
   return promise
     .then((result) => {
       return [undefined, result] as [undefined, T];
