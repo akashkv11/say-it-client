@@ -3,19 +3,28 @@ import { Button, Card, Form, Input } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { usePopMessage } from "../../context/messageContext";
-import api from "../../utils/axios-instance";
 import { errorHandler } from "../../utils/error-handler";
+import { AxiosError } from "axios";
+import { ErrorResponseType } from "../../types/response-type";
+import api from "../../lib/axios";
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
-  const {popMessage} = usePopMessage();
+  const { popMessage } = usePopMessage();
   const onFinish = async (values: any) => {
     console.log("Registration Data:", values);
-    const [error, data] = await errorHandler(api.post("/users/signup", values));
+    const [error, data] = await errorHandler<
+      any,
+      AxiosError<ErrorResponseType>
+    >(api.post("/users/signup", values));
     if (error) {
       console.error("Registration Error:", error);
-      // Handle error appropriately, e.g., show a notification
-      popMessage("error", "Registration failed. Please try again.");
+
+      const errorMessage =
+        error.response?.data?.message ||
+        "Registration failed. Please try again.";
+
+      popMessage("error", errorMessage);
       return;
     }
     console.log("Registration Success:", data);
