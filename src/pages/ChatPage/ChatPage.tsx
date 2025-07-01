@@ -4,17 +4,12 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { Avatar, Button, Input, Layout, List, Space, Typography } from "antd";
-import React, { useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { User } from "../../context/AuthContext";
+import { useSocket } from "../../hooks/useSocket";
 
 const { Header, Content, Footer } = Layout;
 const { Text } = Typography;
-
-interface Message {
-  id: number;
-  sender: "me" | "other";
-  text: string;
-}
 
 type Props = {
   isVisible: boolean;
@@ -27,22 +22,22 @@ const ChatPage: React.FC<Props> = ({
   setIsChatPageVisible,
   recipient,
 }) => {
-  const [messages, setMessages] = useState<Message[]>([
-    { id: 1, sender: "other", text: "Hey! How are you?" },
-    { id: 2, sender: "me", text: "I'm good, thanks! How about you?" },
-  ]);
+  const { messages, sendMessage } = useSocket();
   const [inputValue, setInputValue] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const handleSend = () => {
-    if (!inputValue.trim()) return;
-    const newMessage: Message = {
-      id: messages.length + 1,
-      sender: "me",
-      text: inputValue,
-    };
-    setMessages([...messages, newMessage]);
+    if (!inputValue.trim() || !recipient?.id) return;
+
+    sendMessage(recipient.id, inputValue);
     setInputValue("");
   };
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   if (!isVisible) {
     return null; // If the chat page is not visible, return null
@@ -51,7 +46,6 @@ const ChatPage: React.FC<Props> = ({
   return (
     <Layout style={{ height: "100vh" }}>
       {/* Header */}
-
       <Header
         style={{
           background: "#fff",
@@ -99,8 +93,10 @@ const ChatPage: React.FC<Props> = ({
             </List.Item>
           )}
         />
+        <div ref={messagesEndRef} />
       </Content>
 
+      {/* Input Area */}
       <Footer style={{ padding: "10px 20px" }}>
         <Space.Compact style={{ width: "100%" }}>
           <Input
