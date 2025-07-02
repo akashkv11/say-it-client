@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { usePopMessage } from "../../context/messageContext";
 import { errorHandler } from "../../utils/error-handler";
 import { AxiosError } from "axios";
-import { ErrorResponseType } from "../../types/response-type";
+import { ErrorResponseType } from "../../types/response.type";
 import api from "../../lib/axios";
 
 const SignUp: React.FC = () => {

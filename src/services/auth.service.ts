@@ -1,7 +1,7 @@
 import { AxiosError, AxiosResponse } from "axios";
 import api from "../lib/axios";
 import tryCatch from "../utils/try-catch";
-import { ErrorResponseType, ResponseType } from "../types/response-type";
+import { ErrorResponseType, ResponseType } from "../types/response.type";
 import { User } from "../context/AuthContext";
 type FormValues = {
   email: string;
