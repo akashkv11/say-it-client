@@ -2,7 +2,7 @@ import { Layout } from "antd";
 import React, { useEffect, useState } from "react";
 import SideBar from "../../components/SideBar";
 import RecentChats from "./components/RecentChats";
-import ChatPage from "../ChatPage/ChatPage";
+import ChatPage from "./components/ChatPage";
 import { getAllUsers } from "../../services/user.service";
 import { User } from "../../context/AuthContext";
 

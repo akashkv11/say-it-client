@@ -5,8 +5,8 @@ import {
 } from "@ant-design/icons";
 import { Avatar, Button, Input, Layout, List, Space, Typography } from "antd";
 import React, { useRef, useEffect, useState } from "react";
-import { User } from "../../context/AuthContext";
-import { useSocket } from "../../hooks/useSocket";
+import { User } from "../../../context/AuthContext";
+import { useSocket } from "../../../hooks/useSocket";
 
 const { Header, Content, Footer } = Layout;
 const { Text } = Typography;
