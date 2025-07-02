@@ -22,7 +22,7 @@ const ChatPage: React.FC<Props> = ({
   setIsChatPageVisible,
   recipient,
 }) => {
-  const { messages, sendMessage } = useSocket();
+  const { messages, sendMessage } = useSocket({ selectedChatUser: recipient });
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 

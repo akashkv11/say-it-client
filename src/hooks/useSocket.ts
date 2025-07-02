@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
+import { User } from "../context/AuthContext";
 
 interface Message {
   id: number;
@@ -7,7 +8,11 @@ interface Message {
   text: string;
 }
 
-export const useSocket = () => {
+type HookParams = {
+  selectedChatUser: User | null; // Add this line to include selectedChatUser
+};
+
+export const useSocket = ({ selectedChatUser }: HookParams) => {
   const socketRef = useRef<Socket | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
 
@@ -21,9 +26,12 @@ export const useSocket = () => {
         sender: "other",
         text: data.content,
       };
-      setMessages((prev) => [...prev, newMessage]);
+
+      if (selectedChatUser && selectedChatUser.id === data.senderId) {
+        setMessages((prev) => [...prev, newMessage]);
+      }
     },
-    []
+    [selectedChatUser]
   );
 
   useEffect(() => {
