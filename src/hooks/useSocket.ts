@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { User } from "../context/AuthContext";
+import { getChatWithSelectedUser } from "../services/user.service";
+import { ChatMessageType } from "../types/message.types";
 
 interface Message {
   id: number;
@@ -18,6 +20,10 @@ export const useSocket = ({ selectedChatUser }: HookParams) => {
 
   const token = localStorage.getItem("token");
   const url = import.meta.env.VITE_API_URL; // e.g., http://localhost:3000
+
+  useEffect(() => {
+    fetchChatHistory();
+  }, [selectedChatUser]);
 
   const handleIncomingMessage = useCallback(
     (data: { content: string; senderId: string }) => {
@@ -56,6 +62,26 @@ export const useSocket = ({ selectedChatUser }: HookParams) => {
       }
     };
   }, [url, handleIncomingMessage]);
+
+  const fetchChatHistory = async () => {
+    if (selectedChatUser) {
+      const response = await getChatWithSelectedUser(selectedChatUser.id);
+      console.log("Fetched chat history:", response);
+      processMessages(response);
+    }
+  };
+
+  const processMessages = (data: ChatMessageType[]) => {
+    const formattedMessages = data.map(
+      (msg, index) =>
+        ({
+          id: index,
+          sender: msg.sender_id === selectedChatUser?.id ? "other" : "me",
+          text: msg.content,
+        } as Message)
+    );
+    setMessages(formattedMessages);
+  };
 
   const sendMessage = (recipientId: string, content: string) => {
     if (socketRef.current) {

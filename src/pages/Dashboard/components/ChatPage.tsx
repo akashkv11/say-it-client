@@ -26,13 +26,6 @@ const ChatPage: React.FC<Props> = ({
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  const handleSend = () => {
-    if (!inputValue.trim() || !recipient?.id) return;
-
-    sendMessage(recipient.id, inputValue);
-    setInputValue("");
-  };
-
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -42,6 +35,13 @@ const ChatPage: React.FC<Props> = ({
   if (!isVisible) {
     return null; // If the chat page is not visible, return null
   }
+
+  const handleSend = () => {
+    if (!inputValue.trim() || !recipient?.id) return;
+
+    sendMessage(recipient.id, inputValue);
+    setInputValue("");
+  };
 
   return (
     <Layout style={{ height: "100vh" }}>
